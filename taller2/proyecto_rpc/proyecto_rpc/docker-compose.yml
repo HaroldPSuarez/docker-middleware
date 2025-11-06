@@ -1,0 +1,82 @@
+version: '3.8'
+
+services:
+  middleware:
+    build: ./middleware
+    container_name: middleware
+    ports:
+      - "9000:9000"
+    networks:
+      - red_comercial
+    restart: always
+
+  tienda:
+    build: ./tienda
+    container_name: tienda
+    ports:
+      - "9001:9001"
+    depends_on:
+      - middleware
+    networks:
+      - red_comercial
+    restart: always
+
+  inventario:
+    build: ./inventario
+    container_name: inventario
+    ports:
+      - "9002:9002"
+    depends_on:
+      - middleware
+    networks:
+      - red_comercial
+    restart: always
+
+  compras_ventas:
+    build: ./compras_ventas
+    container_name: compras_ventas
+    ports:
+      - "9003:9003"
+    depends_on:
+      - middleware
+    networks:
+      - red_comercial
+    restart: always
+
+  contabilidad:
+    build: ./contabilidad
+    container_name: contabilidad
+    ports:
+      - "9004:9004"
+    depends_on:
+      - middleware
+    networks:
+      - red_comercial
+    restart: always
+
+  transportador:
+    build: ./transportador
+    container_name: transportador
+    ports:
+      - "9005:9005"
+    depends_on:
+      - middleware
+    networks:
+      - red_comercial
+    restart: always
+
+  atencion_proveedores:
+    build: ./atencion_proveedores
+    container_name: atencion_proveedores
+    ports:
+      - "9006:9006"
+    depends_on:
+      - middleware
+    networks:
+      - red_comercial
+    restart: always
+
+networks:
+  red_comercial:
+    driver: bridge
+
