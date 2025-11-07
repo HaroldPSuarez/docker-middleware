@@ -77,6 +77,32 @@ class ComprasVentas:
             print(f"[COMPRAS_VENTAS] [{timestamp()}] {error_msg}")
             return {'success': False, 'message': error_msg}
 
+    def registrarPedido(self, pedido):
+        try:
+            print(f"[COMPRAS_VENTAS] [{timestamp()}] Registrando pedido: {pedido.get('id')}")
+            
+            # Guardar pedido localmente
+            self.compras.append(pedido)
+            
+            # Registrar movimiento contable (egreso)
+            cont_resp = self._llamar_servicio(self.contabilidad_url, 'registrarMovimiento', 
+                                             'egreso', 
+                                             f"Pedido {pedido.get('id')} - {pedido.get('nombre_producto', 'Producto')}", 
+                                             500.0)  # Costo estimado
+            
+            print(f"[COMPRAS_VENTAS] [{timestamp()}] ✅ Pedido {pedido.get('id')} registrado")
+            
+            return {
+                'success': True, 
+                'data': pedido, 
+                'message': 'Pedido registrado correctamente'
+            }
+            
+        except Exception as e:
+            error_msg = f'Error en registrarPedido: {e}'
+            print(f"[COMPRAS_VENTAS] [{timestamp()}] ❌ {error_msg}")
+            return {'success': False, 'message': error_msg}
+
     def ping(self):
         return True
 
